@@ -1,8 +1,9 @@
 import os
-from flask import Flask, flash, render_template, redirect, url_for, request
+from flask import Flask, flash, render_template, redirect, url_for, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
+from scripts.DominantColors import main as getColors
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -45,5 +46,12 @@ def image(id):
   img = Image.query.get(id)
   return render_template('image.html',filename=img.filename)
 
+@app.route('/<id>/colors')
+def get_colors(id):
+    img = Image.query.get(id)
+    filename = os.path.abspath(os.path.join(app.config['UPLOAD_FOLDER'], img.filename))
+    colors = getColors(filename,5)
+    return jsonify(colors)
+    
 if __name__ == '__main__':
   app.run()

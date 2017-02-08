@@ -1,4 +1,54 @@
 {% extends "base.html" %}
 {% block body %}
-<image src={{ url_for('static', filename='images/'+filename) }}>
+<div id="container">
+  <image id="img" src={{ url_for('static', filename='images/'+filename) }}>
+</div>
+<style>
+#container {
+  width: 80%
+  max-width: 600px;
+  margin: 0 auto;
+}
+#img {
+  align: center;
+  margin: 0 auto;
+  display: block;
+  padding-bottom: 20px;
+  max-height: 300px;
+  max-width: 600px;
+}
+.color {
+  width: 100%;
+  display: block;
+}
+</style>
+<script>
+  "use strict"
+  fetch('./colors')
+  .then(response => {
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw 'No data!';
+    }
+  })
+  .then(colors => {
+    var container = document.getElementById('container');
+    var h_space = document.getElementById('img').getBoundingClientRect().height;
+    h_space = window.innerHeight - h_space
+    var spacing = 10;
+    var h = h_space / colors.length - spacing;
+    colors.forEach((c,i) => {
+        var color = document.createElement('div');
+        var style = [
+          "background-color:"+c,
+          "width:"+h+"px",
+          "margin-bottom:"+spacing+"px"
+        ]
+        color.setAttribute("class","color");
+        color.setAttribute("style",style.join(';'));
+        container.appendChild(color);
+    });
+  });
+</script>
 {% endblock %}

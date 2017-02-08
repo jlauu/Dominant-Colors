@@ -7,6 +7,8 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 
 db = SQLAlchemy(app)
 
+from models import *
+
 @app.route('/')
 def index():
     return "Hello World!"
